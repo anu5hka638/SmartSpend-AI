@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fdf6f9;
+  --foreground: #1f2937;
+  --accent: #f472b6;
+  --accent-2: #fbcfe8;
+  --card: #ffffff;
+  --border: #fce7f3;
 }
 
 @theme inline {
@@ -14,13 +18,18 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #fdf6f9;
+    --foreground: #1f2937;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, Segoe UI,
+    Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 30%, white);
 }
