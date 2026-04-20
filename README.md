@@ -77,29 +77,20 @@ Open [http://localhost:3000](http://localhost:3000)
 ## Project Structure
 src/
 ├── app/
-
 │   ├── page.js          # Dashboard
-
 │   ├── transactions/    # Expense tracker
-
 │   ├── budget/          # Budget goals
-
 │   ├── chat/            # AI advisor
-
 │   └── api/chat/        # Claude API route
-
 ├── lib/
 │   ├── FinanceContext.js # Global state
-
 │   ├── anomalyDetector.js # Spending anomaly logic
-
 │   ├── finance.js        # Financial calculations
-
 │   └── categories.js     # Category definitions
-
 └── components/
 ├── AppShell.jsx      # Navigation layout
 └── ui.jsx            # Reusable UI components
 
 ## Author
-Built by Anushka Sharma 
+Anushka Sharma - https://www.linkedin.com/in/anushka-sharma-b80630302?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app
+
