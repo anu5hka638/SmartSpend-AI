@@ -15,6 +15,12 @@ const SUGGESTED = [
   "How does my spending compare to a typical Dubai resident?",
 ];
 
+const WELCOME_MESSAGE = {
+  role: "assistant",
+  content:
+    "Hi! I'm your SmartSpend AI advisor. I can see your transactions, budget goals, and spending patterns. Ask me anything about your finances — like where you're overspending, how to save more, or how to plan your budget for next month.",
+};
+
 function Bubble({ message }) {
   const isUser = message?.role === "user";
   return (
@@ -33,25 +39,47 @@ function Bubble({ message }) {
           <ReactMarkdown
             components={{
               h1: ({ children }) => (
-                <p style={{ fontWeight: 500, fontSize: "15px", marginBottom: "6px" }}>{children}</p>
+                <p style={{ fontWeight: 500, fontSize: "15px", marginBottom: "6px" }}>
+                  {children}
+                </p>
               ),
               h2: ({ children }) => (
-                <p style={{ fontWeight: 500, fontSize: "14px", marginBottom: "4px" }}>{children}</p>
+                <p style={{ fontWeight: 500, fontSize: "14px", marginBottom: "4px" }}>
+                  {children}
+                </p>
               ),
               h3: ({ children }) => (
-                <p style={{ fontWeight: 500, fontSize: "13px", marginBottom: "4px" }}>{children}</p>
+                <p style={{ fontWeight: 500, fontSize: "13px", marginBottom: "4px" }}>
+                  {children}
+                </p>
               ),
               strong: ({ children }) => (
-                <span style={{ fontWeight: 500, color: "var(--tw-prose-bold)" }}>{children}</span>
+                <span style={{ fontWeight: 500, color: "var(--tw-prose-bold)" }}>
+                  {children}
+                </span>
               ),
-              ul: ({ children }) => <ul style={{ paddingLeft: "1rem", margin: "4px 0" }}>{children}</ul>,
-              ol: ({ children }) => <ol style={{ paddingLeft: "1rem", margin: "4px 0" }}>{children}</ol>,
-              li: ({ children }) => <li style={{ marginBottom: "3px", fontSize: "13px" }}>{children}</li>,
+              ul: ({ children }) => (
+                <ul style={{ paddingLeft: "1rem", margin: "4px 0" }}>{children}</ul>
+              ),
+              ol: ({ children }) => (
+                <ol style={{ paddingLeft: "1rem", margin: "4px 0" }}>{children}</ol>
+              ),
+              li: ({ children }) => (
+                <li style={{ marginBottom: "3px", fontSize: "13px" }}>{children}</li>
+              ),
               p: ({ children }) => (
-                <p style={{ margin: "4px 0", fontSize: "13px", lineHeight: "1.6" }}>{children}</p>
+                <p style={{ margin: "4px 0", fontSize: "13px", lineHeight: "1.6" }}>
+                  {children}
+                </p>
               ),
               hr: () => (
-                <hr style={{ border: "none", borderTop: "0.5px solid #fce7f3", margin: "8px 0" }} />
+                <hr
+                  style={{
+                    border: "none",
+                    borderTop: "0.5px solid #fce7f3",
+                    margin: "8px 0",
+                  }}
+                />
               ),
             }}
           >
@@ -64,14 +92,25 @@ function Bubble({ message }) {
 }
 
 export default function ChatPage() {
-  const { hydrated, transactions, monthlyIncome, budgetGoals, chatHistory, setChatHistory } = useFinance();
+  const {
+    hydrated,
+    transactions,
+    monthlyIncome,
+    budgetGoals,
+    chatHistory,
+    setChatHistory,
+  } = useFinance();
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const listRef = useRef(null);
 
   const monthSpent = useMemo(
-    () => sumTransactions(transactions, { type: "expense", inMonthOf: new Date() }),
+    () =>
+      sumTransactions(transactions, {
+        type: "expense",
+        inMonthOf: new Date(),
+      }),
     [transactions],
   );
 
@@ -81,13 +120,19 @@ export default function ChatPage() {
     el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
   }, [chatHistory, loading]);
 
-  const canSend = useMemo(() => input.trim().length > 0 && !loading, [input, loading]);
+  const canSend = useMemo(
+    () => input.trim().length > 0 && !loading,
+    [input, loading],
+  );
 
   async function send(text) {
     const trimmed = String(text || "").trim();
     if (!trimmed || loading) return;
     setError("");
-    const next = [...(chatHistory || []), { role: "user", content: trimmed }];
+    const next = [
+      ...(chatHistory || []),
+      { role: "user", content: trimmed },
+    ];
     setChatHistory(next);
     setInput("");
     setLoading(true);
@@ -97,30 +142,42 @@ export default function ChatPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: next.filter((m) => m.role === "user" || m.role === "assistant").slice(-20),
+          messages: next
+            .filter((m) => m.role === "user" || m.role === "assistant")
+            .slice(-20),
           context: { transactions, monthlyIncome, budgetGoals },
           mode: "chat",
         }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data?.error || "Chat request failed.");
-      const reply = typeof data?.reply === "string" ? data.reply.trim() : "";
+      const reply =
+        typeof data?.reply === "string" ? data.reply.trim() : "";
       setChatHistory((prev) => [
         ...(Array.isArray(prev) ? prev : []),
-        { role: "assistant", content: reply || "Sorry — I couldn’t generate a reply." },
+        {
+          role: "assistant",
+          content: reply || "Sorry — I couldn't generate a reply.",
+        },
       ]);
     } catch (e) {
-      setError("Something went wrong talking to Claude. Please try again.");
+      setError(
+        "Something went wrong talking to Claude. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
   }
 
+  const showWelcome = true;
+
   return (
     <div className="h-[calc(100dvh-88px)] md:h-[calc(100dvh-96px)] flex flex-col gap-4 overflow-hidden">
       <div className="shrink-0 flex items-end justify-between gap-4">
         <div>
-          <div className="text-3xl font-semibold tracking-tight text-gray-800">AI Advisor</div>
+          <div className="text-3xl font-semibold tracking-tight text-gray-800">
+            AI Advisor
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -129,7 +186,8 @@ export default function ChatPage() {
             className="px-3 py-1.5 rounded-full text-pink-500 hover:bg-pink-50"
             onClick={() => {
               setChatHistory([]);
-              if (typeof window !== "undefined") window.localStorage.removeItem("smartspend_chat");
+              if (typeof window !== "undefined")
+                window.localStorage.removeItem("smartspend_chat");
             }}
           >
             Clear chat
@@ -162,27 +220,27 @@ export default function ChatPage() {
           ref={listRef}
           className="flex-1 min-h-0 overflow-y-auto bg-white px-4 sm:px-6 py-6 space-y-4"
         >
+          <Bubble message={WELCOME_MESSAGE} />
+
           {(chatHistory || []).map((m, idx) => (
             <Bubble key={idx} message={m} />
           ))}
+
           {loading ? (
-            <Bubble
-              message={{
-                role: "assistant",
-                content: "…",
-              }}
-            />
+            <Bubble message={{ role: "assistant", content: "…" }} />
           ) : null}
         </div>
 
         <div className="shrink-0 border-t border-pink-100 bg-white px-4 sm:px-6 py-4">
-          {error ? <div className="mb-2 text-sm text-red-400">{error}</div> : null}
+          {error ? (
+            <div className="mb-2 text-sm text-red-400">{error}</div>
+          ) : null}
           <div className="flex gap-2 items-end">
             <Textarea
               rows={2}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder=""
+              placeholder="Ask me anything about your finances…"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
@@ -205,4 +263,3 @@ export default function ChatPage() {
     </div>
   );
 }
-
