@@ -8,7 +8,11 @@ expenses with roommates.
 🔗 [smartspend-ai-mu.vercel.app](https://smartspend-ai-mu.vercel.app)
 
 ## Screenshots
-(Add screenshots of your app here after uploading them)
+<img width="1891" height="877" alt="Dashboard" src="https://github.com/user-attachments/assets/73d69229-7d21-4545-921d-09d0d3365a78" />
+<img width="1877" height="862" alt="Transactions" src="https://github.com/user-attachments/assets/9128c074-3495-4416-8e0d-620c5df0978f" />
+<img width="1876" height="873" alt="Budget" src="https://github.com/user-attachments/assets/26a282fc-19ba-4e88-b271-3bfd98181749" />
+<img width="1906" height="858" alt="AI chat" src="https://github.com/user-attachments/assets/9d1bd15c-ca59-4b4b-b846-e536dac751fd" />
+
 
 ## Features
 - Expense and income tracking in AED
